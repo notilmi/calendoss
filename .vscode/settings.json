@@ -1,0 +1,16 @@
+{
+  "sqltools.connections": [
+    {
+      "pgOptions": {
+        "ssl": {
+          "rejectUnauthorized": true
+        }
+      },
+      "previewLimit": 50,
+      "server": "localhost",
+      "driver": "PostgreSQL",
+      "name": "Calendoss-Neon",
+      "connectString": "postgresql://calendoss-db_owner:1VsHx9FarJiu@ep-white-fog-a16zkf24-pooler.ap-southeast-1.aws.neon.tech/calendoss-db?sslmode=require"
+    }
+  ]
+}

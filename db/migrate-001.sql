@@ -1,0 +1,29 @@
+CREATE TABLE IF NOT EXISTS users (
+  id TEXT NOT NULL PRIMARY KEY DEFAULT gen_random_uuid(),
+  email TEXT NOT NULL UNIQUE,
+  password TEXT NOT NULL,
+  full_name TEXT,
+  image TEXT,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS rooms (
+  id TEXT NOT NULL PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT NOT NULL,
+  description TEXT,
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS reservations (
+  id TEXT NOT NULL PRIMARY KEY DEFAULT gen_random_uuid(),
+  time_period tstzrange NOT NULL,
+  room_id TEXT NOT NULL REFERENCES rooms(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE
+);
+
+ALTER TABLE reservations
+  ADD CONSTRAINT exclude_reservation_period
+  EXCLUDE USING GIST (room_id WITH =, time_period WITH &&)

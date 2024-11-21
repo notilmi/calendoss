@@ -1,0 +1,12 @@
+services:
+  postgres:
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgreslocal
+      POSTGRES_PASSWORD: postgreslocal
+      POSTGRES_DB: localdb
+    volumes:
+      - .dockervolumes/postgres-data:/var/lib/postgresql/data
