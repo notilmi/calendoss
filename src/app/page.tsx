@@ -1,6 +1,35 @@
+import { getNeonClient } from "@/lib/db";
+import { User, Room } from "@/types/db";
+import { neon } from "@neondatabase/serverless";
 import Image from "next/image";
 
-export default function Home() {
+export default async function Home() {
+  const sql = neon(process.env.DATABASE_URL!);
+
+  const user_id = "8a66ecd5-8fae-4b97-972c-e8ab7d45152f";
+  const [user, rooms] = await sql.transaction([
+    sql`
+    SELECT 
+      * 
+    FROM 
+      users
+    WHERE
+      id = ${user_id}
+    `,
+    sql`
+    SELECT 
+      * 
+    FROM
+      rooms
+    WHERE
+      user_id = ${user_id}`,
+  ]);
+
+  const parsed = {
+    ...(user[0] as User),
+    rooms: rooms as Room[],
+  } satisfies User & { rooms: Room[] };
+
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
